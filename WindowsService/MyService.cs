@@ -1,0 +1,70 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Diagnostics;
+using System.Linq;
+using System.ServiceProcess;
+using System.Text;
+using System.Threading.Tasks;
+using System.Timers;
+using System.Configuration;
+using System.IO;
+
+namespace WindowsService
+{
+    public partial class MyService : ServiceBase
+    {
+        public MyService()
+        {
+            InitializeComponent();
+        }
+        
+        protected override void OnStart(string[] args)
+        {
+            Timer timer = new Timer();
+            timer.Interval = int.Parse(ConfigurationSettings.AppSettings["IntervalTimer"]); //设置计时器事件间隔执行时间
+            //判断是否在每天5点到6点之间
+            TimeSpan nowDt = DateTime.Now.TimeOfDay;
+            TimeSpan workStartDT = DateTime.Parse("5:00").TimeOfDay;
+            TimeSpan workEndDT = DateTime.Parse("6:00").TimeOfDay;
+            if (nowDt > workStartDT && nowDt < workEndDT)
+            {
+                timer.Elapsed += Timer_Elapsed;
+                timer.Enabled = true;
+            }
+        }
+
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            try
+            {
+                DeleteFile(ConfigurationSettings.AppSettings["FilePath"], int.Parse(ConfigurationSettings.AppSettings["DeleteTimeForDays"]));  //删除该目录下 超过 7天的文件
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        private void DeleteFile(string fileDirect,int saveDay)
+
+        {
+
+            DateTime nowTime = DateTime.Now;
+
+            string[] files = Directory.GetFiles(fileDirect , ConfigurationSettings.AppSettings["GetFiles"], SearchOption.AllDirectories);  //获取该目录下所有 .txt文件
+            foreach (string file in files)
+            { 
+                FileInfo fileInfo = new FileInfo(file);
+                TimeSpan t = nowTime - fileInfo.CreationTime;  //当前时间  减去 文件创建时间
+                int day = t.Days;
+                if (day >= saveDay)   //保存的时间 ；  单位：天
+                {
+                    File.Delete(file);  //删除超过时间的文件
+                }
+            }
+        }
+    }
+}
