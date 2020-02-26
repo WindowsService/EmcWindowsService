@@ -39,8 +39,8 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "111";
-            this.serviceInstaller1.DisplayName = "2222";
+            this.serviceInstaller1.Description = "定时删除文件";
+            this.serviceInstaller1.DisplayName = "MyService";
             this.serviceInstaller1.ServiceName = "MyService";
             // 
             // ProjectInstaller

@@ -26,8 +26,8 @@ namespace WindowsService
             timer.Interval = int.Parse(ConfigurationSettings.AppSettings["IntervalTimer"]); //设置计时器事件间隔执行时间
             //判断是否在每天5点到6点之间
             TimeSpan nowDt = DateTime.Now.TimeOfDay;
-            TimeSpan workStartDT = DateTime.Parse("5:00").TimeOfDay;
-            TimeSpan workEndDT = DateTime.Parse("6:00").TimeOfDay;
+            TimeSpan workStartDT = DateTime.Parse(ConfigurationSettings.AppSettings["workStartDT"]).TimeOfDay;
+            TimeSpan workEndDT = DateTime.Parse(ConfigurationSettings.AppSettings["workEndDT"]).TimeOfDay;
             if (nowDt > workStartDT && nowDt < workEndDT)
             {
                 timer.Elapsed += Timer_Elapsed;
