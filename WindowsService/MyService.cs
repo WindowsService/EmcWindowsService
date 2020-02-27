@@ -23,11 +23,11 @@ namespace WindowsService
         protected override void OnStart(string[] args)
         {
             Timer timer = new Timer();
-            timer.Interval = int.Parse(ConfigurationSettings.AppSettings["IntervalTimer"]); //设置计时器事件间隔执行时间
+            timer.Interval = int.Parse(ConfigurationManager.AppSettings["IntervalTimer"]); //设置计时器事件间隔执行时间
             //判断是否在每天5点到6点之间
             TimeSpan nowDt = DateTime.Now.TimeOfDay;
-            TimeSpan workStartDT = DateTime.Parse(ConfigurationSettings.AppSettings["workStartDT"]).TimeOfDay;
-            TimeSpan workEndDT = DateTime.Parse(ConfigurationSettings.AppSettings["workEndDT"]).TimeOfDay;
+            TimeSpan workStartDT = DateTime.Parse(ConfigurationManager.AppSettings["workStartDT"]).TimeOfDay;
+            TimeSpan workEndDT = DateTime.Parse(ConfigurationManager.AppSettings["workEndDT"]).TimeOfDay;
             if (nowDt > workStartDT && nowDt < workEndDT)
             {
                 timer.Elapsed += Timer_Elapsed;
@@ -39,7 +39,7 @@ namespace WindowsService
         {
             try
             {
-                DeleteFile(ConfigurationSettings.AppSettings["FilePath"], int.Parse(ConfigurationSettings.AppSettings["DeleteTimeForDays"]));  //删除该目录下 超过 7天的文件
+                DeleteFile(ConfigurationManager.AppSettings["FilePath"], int.Parse(ConfigurationManager.AppSettings["DeleteTimeForDays"]));  //删除该目录下 超过 7天的文件
             }
             catch (Exception)
             {
@@ -57,7 +57,7 @@ namespace WindowsService
 
             DateTime nowTime = DateTime.Now;
 
-            string[] files = Directory.GetFiles(fileDirect , ConfigurationSettings.AppSettings["GetFiles"], SearchOption.AllDirectories);  //获取该目录下所有 .txt文件
+            string[] files = Directory.GetFiles(fileDirect , ConfigurationManager.AppSettings["GetFiles"], SearchOption.AllDirectories);  //获取该目录下所有 .txt文件
             foreach (string file in files)
             { 
                 FileInfo fileInfo = new FileInfo(file);
