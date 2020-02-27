@@ -52,6 +52,9 @@ namespace WindowsService
 
         {
 
+
+
+
             DateTime nowTime = DateTime.Now;
 
             string[] files = Directory.GetFiles(fileDirect , ConfigurationSettings.AppSettings["GetFiles"], SearchOption.AllDirectories);  //获取该目录下所有 .txt文件
@@ -62,9 +65,15 @@ namespace WindowsService
                 int day = t.Days;
                 if (day >= saveDay)   //保存的时间 ；  单位：天
                 {
+
                     File.Delete(file);  //删除超过时间的文件
-                }
+                    log.Info(string.Format("时间{0}删除了文件名{1}",DateTime.Now.ToString("yyyyMMddhhmmss"),fileInfo.Name));
+                }
             }
         }
+        //首先实例化Log4net
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
+     
     }
 }
