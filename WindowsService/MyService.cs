@@ -70,6 +70,8 @@ namespace WindowsService
             foreach (var item in dires)
             {
                 DirectoryInfo fileInfo = new DirectoryInfo(item);
+                if (fileInfo.Name.Equals("Test"))
+                    continue;
                 TimeSpan t = nowTime - fileInfo.CreationTime;  //当前时间  减去 文件创建时间
                 int day = t.Days;
                 if (day >= saveDay)   //保存的时间 ；  单位：天
