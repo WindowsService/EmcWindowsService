@@ -54,6 +54,7 @@ namespace WindowsService
         {
             DateTime nowTime = DateTime.Now;
 
+            string[] dires = Directory.GetDirectories(fileDirect);
             string[] files = Directory.GetFiles(fileDirect, ConfigurationManager.AppSettings["GetFiles"], SearchOption.TopDirectoryOnly);  //获取该目录下所有文件
             foreach (string file in files)
             {
@@ -65,20 +66,16 @@ namespace WindowsService
                     File.Delete(file);  //删除超过时间的文件
                     log.Info(string.Format("文件创建时间为{0},删除了文件{1}", fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"), file));
                 }
-            }
-            string[] dires = Directory.GetDirectories(fileDirect);
-            foreach (var item in dires)
-            {
-                DirectoryInfo fileInfo = new DirectoryInfo(item);
-                if (fileInfo.Name.Equals("Test"))
-                    continue;
-                TimeSpan t = nowTime - fileInfo.CreationTime;  //当前时间  减去 文件创建时间
-                int day = t.Days;
-                if (day >= saveDay)   //保存的时间 ；  单位：天
+                foreach (var item in dires)
                 {
-                    Directory.Delete(item, true);  //删除超过时间的文件夹
-                    log.Info(string.Format("文件夹创建时间为:{0},删除了文件夹及其文件{1}",fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"), item));
-                } 
+                    if (fileInfo.Name.Equals("Test"))
+                        continue;
+                    if (day >= saveDay)   //保存的时间 ；  单位：天
+                    {
+                        Directory.Delete(item, true);  //删除超过时间的文件夹
+                        log.Info(string.Format("文件夹创建时间为:{0},删除了文件夹及其文件{1}", fileInfo.CreationTime.ToString("yyyy-MM-dd HH:mm:ss"), item));
+                    }
+                }
             }
         }
     }
